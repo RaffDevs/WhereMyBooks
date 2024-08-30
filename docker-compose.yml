@@ -1,0 +1,37 @@
+﻿services:
+  wheremybooks.api:
+    image: wheremybooks.api
+    container_name: wheremybooks.api
+    build:
+      context: .
+      dockerfile: WhereMyBooks.Api/Dockerfile
+    ports:
+      - "3002:8080"
+    networks:
+      - wheremybooks.net
+    environment:
+      DB_SERVER: wheremybooks.db
+      DB_DATABASE: "wheremybooks"
+      DB_USER: "dev"
+      DB_PASSWORD: "yma2578k"
+      DB_PORT: 5432
+      
+  wheremybooks.db:
+    image: postgres
+    container_name: wheremybooks.db
+    environment:
+      POSTGRES_DB: "wheremybooks"
+      POSTGRES_USER: "dev"
+      POSTGRES_PASSWORD: "yma2578k"
+    ports:
+      - "3001:5432"
+    networks:
+      - wheremybooks.net
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+networks:
+  wheremybooks.net:
+    driver: bridge
+volumes:
+  postgres_data:

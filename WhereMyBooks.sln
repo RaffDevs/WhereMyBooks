@@ -1,0 +1,45 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WhereMyBooks.Core", "WhereMyBooks.Core\WhereMyBooks.Core.csproj", "{283BE670-2967-4D30-AF00-9298540110AC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WhereMyBooks.Infrastructure", "WhereMyBooks.Infrastructure\WhereMyBooks.Infrastructure.csproj", "{B3135122-EFAC-4D06-BBC9-EF2C255E2507}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WhereMyBooks.Application", "WhereMyBooks.Application\WhereMyBooks.Application.csproj", "{5A2123FA-5656-4CFE-9EE1-2A4C8627ECCD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WhereMyBooks.Api", "WhereMyBooks.Api\WhereMyBooks.Api.csproj", "{1F915329-A3D9-4CF0-8B64-3B5A1BB220AA}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{3724917B-0FA4-4F71-A89F-A3F1D86B13A9}"
+	ProjectSection(SolutionItems) = preProject
+		docker-compose.yml = docker-compose.yml
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WhereMyBooks.CrossCutting", "WhereMyBooks.CrossCutting\WhereMyBooks.CrossCutting.csproj", "{153769AD-35A1-4D0E-9CCD-5BBD205719DD}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{283BE670-2967-4D30-AF00-9298540110AC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{283BE670-2967-4D30-AF00-9298540110AC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{283BE670-2967-4D30-AF00-9298540110AC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{283BE670-2967-4D30-AF00-9298540110AC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B3135122-EFAC-4D06-BBC9-EF2C255E2507}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B3135122-EFAC-4D06-BBC9-EF2C255E2507}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B3135122-EFAC-4D06-BBC9-EF2C255E2507}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B3135122-EFAC-4D06-BBC9-EF2C255E2507}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5A2123FA-5656-4CFE-9EE1-2A4C8627ECCD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5A2123FA-5656-4CFE-9EE1-2A4C8627ECCD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5A2123FA-5656-4CFE-9EE1-2A4C8627ECCD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5A2123FA-5656-4CFE-9EE1-2A4C8627ECCD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1F915329-A3D9-4CF0-8B64-3B5A1BB220AA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1F915329-A3D9-4CF0-8B64-3B5A1BB220AA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1F915329-A3D9-4CF0-8B64-3B5A1BB220AA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1F915329-A3D9-4CF0-8B64-3B5A1BB220AA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{153769AD-35A1-4D0E-9CCD-5BBD205719DD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{153769AD-35A1-4D0E-9CCD-5BBD205719DD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{153769AD-35A1-4D0E-9CCD-5BBD205719DD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{153769AD-35A1-4D0E-9CCD-5BBD205719DD}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
