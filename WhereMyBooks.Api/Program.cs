@@ -3,20 +3,19 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using WhereMyBooks.Application.Commands.CreateOwner;
-using WhereMyBooks.Core.Repositories;
-using WhereMyBooks.Core.Services;
+using WhereMyBooks.Api.Filters;
 using WhereMyBooks.CrossCutting.IoC;
-using WhereMyBooks.Infrastructure.Auth;
 using WhereMyBooks.Infrastructure.Persistence;
-using WhereMyBooks.Infrastructure.Persistence.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddDatabaseContext(builder.Configuration);
 builder.Services.AddAppServices();
-builder.Services.AddControllers();
+builder.Services.AddControllers(options =>
+{
+    options.Filters.Add(typeof(ValidationFilter));
+});
 builder.Services.AddMediator();
 builder.Services.AddFluentValidator();
 

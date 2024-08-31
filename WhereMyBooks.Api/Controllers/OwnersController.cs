@@ -12,7 +12,6 @@ using WhereMyBooks.Application.Queries.GetOwnerById;
 namespace WhereMyBooks.Api.Controllers;
 
 [Route("api/owners")]
-[Authorize]
 public class OwnersController : ControllerBase
 {
     private readonly IMediator _mediator;
