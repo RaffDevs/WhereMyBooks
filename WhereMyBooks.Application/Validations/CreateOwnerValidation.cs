@@ -9,8 +9,21 @@ public class CreateOwnerValidation : AbstractValidator<CreateOwnerInputModel>
     {
         RuleFor(p => p.FirstName)
             .NotNull()
-            .WithMessage("O primeiro nome deve ser fornecido!")
+            .NotEmpty();
+
+        RuleFor(p => p.LastName)
+            .NotNull()
+            .NotEmpty();
+
+        RuleFor(p => p.Email)
+            .NotNull()
             .NotEmpty()
-            .WithMessage("O primeiro nome deve ser fornecido!");
+            .EmailAddress();
+
+        RuleFor(p => p.Password)
+            .NotNull()
+            .NotEmpty()
+            .MinimumLength(6)
+            .MaximumLength(30);
     }
 }
