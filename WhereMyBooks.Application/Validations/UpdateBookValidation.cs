@@ -3,9 +3,9 @@ using WhereMyBooks.Application.Models.InputModels;
 
 namespace WhereMyBooks.Application.Validations;
 
-public class CreateBookValidation : AbstractValidator<CreateBookInputModel>
+public class UpdateBookValidation : AbstractValidator<UpdateBookInputModel>
 {
-    public CreateBookValidation()
+    public UpdateBookValidation()
     {
         RuleFor(p => p.Title)
             .NotNull()
@@ -36,17 +36,5 @@ public class CreateBookValidation : AbstractValidator<CreateBookInputModel>
         RuleFor(p => p.PageCount)
             .NotNull()
             .NotEmpty();
-
-        RuleFor(p => p.IdOwner)
-            .NotNull()
-            .WithMessage("Owner must be provided!")
-            .NotEmpty()
-            .WithMessage("Valid owner must be provided!");
-
-        RuleFor(p => p.IdShelf)
-            .NotEmpty()
-            .WithMessage("Shelf must be provided")
-            .NotNull()
-            .WithMessage("Valid shelf must be provided");
     }
 }
