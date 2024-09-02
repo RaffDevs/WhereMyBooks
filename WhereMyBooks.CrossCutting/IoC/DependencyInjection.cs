@@ -47,6 +47,16 @@ public static class DependencyInjection
         return services;
     }
 
+    public static IServiceCollection AddHttpClient(this IServiceCollection services, IConfiguration config)
+    {
+        services.AddHttpClient("GoogleService", httpClient =>
+        {
+            httpClient.BaseAddress = new Uri("https://www.googleapis.com");
+        });
+
+        return services;
+    }
+
     public static IServiceCollection AddMediator(this IServiceCollection services)
     {
         services.AddMediatR(
