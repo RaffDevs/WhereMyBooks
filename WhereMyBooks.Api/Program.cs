@@ -12,6 +12,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddDatabaseContext(builder.Configuration);
 builder.Services.AddAppServices();
+builder.Services.AddHttpClient(builder.Configuration);
 builder.Services.AddControllers(options =>
 {
     options.Filters.Add(typeof(ValidationFilter));

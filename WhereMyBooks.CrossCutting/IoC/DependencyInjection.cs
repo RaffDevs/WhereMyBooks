@@ -10,6 +10,7 @@ using WhereMyBooks.Core.Services;
 using WhereMyBooks.Infrastructure.Auth;
 using WhereMyBooks.Infrastructure.Persistence;
 using WhereMyBooks.Infrastructure.Persistence.Repositories;
+using WhereMyBooks.Infrastructure.Services;
 
 namespace WhereMyBooks.CrossCutting.IoC;
 
@@ -23,6 +24,7 @@ public static class DependencyInjection
         services.AddScoped<IBookRepository, BookRepository>();
         services.AddScoped<IMarkupRepository, MarkupRepository>();
         services.AddScoped<IAuthService, AuthService>();
+        services.AddScoped<IBookService, BookService>();
 
         return services;
     }
@@ -51,7 +53,16 @@ public static class DependencyInjection
     {
         services.AddHttpClient("GoogleService", httpClient =>
         {
-            httpClient.BaseAddress = new Uri("https://www.googleapis.com");
+            httpClient.BaseAddress = new Uri(config.GetSection("GoogleService")["BASE_URI"]);
+        }).ConfigurePrimaryHttpMessageHandler(() =>
+        {
+            var handler = new HttpClientHandler
+            {
+               ClientCertificateOptions = ClientCertificateOption.Manual,
+               ServerCertificateCustomValidationCallback = ((message, certificate2, arg3, arg4) => { return true;})
+            };
+            
+            return handler;
         });
 
         return services;

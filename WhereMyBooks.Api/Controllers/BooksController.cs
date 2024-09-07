@@ -8,6 +8,7 @@ using WhereMyBooks.Application.Commands.UpdateBook;
 using WhereMyBooks.Application.Models.InputModels;
 using WhereMyBooks.Application.Queries.GetAllBooks;
 using WhereMyBooks.Application.Queries.GetBookById;
+using WhereMyBooks.Application.Queries.SearchBooks;
 
 namespace WhereMyBooks.Api.Controllers;
 
@@ -38,6 +39,14 @@ public class BooksController : ControllerBase
         return Ok(book);
     }
 
+    [HttpGet("search")]
+    public async Task<IActionResult> SearchBooks(string title, int idShelf)
+    {
+        var query = new SearchBooksQuery(title, idShelf);
+        var book = await _mediator.Send(query);
+        return Ok(book);
+    }
+
     [HttpPost]
     public async Task<IActionResult> Create([FromBody] CreateBookInputModel model)
     {
@@ -61,4 +70,5 @@ public class BooksController : ControllerBase
         await _mediator.Send(query);
         return NoContent();
     }
+    
 }
