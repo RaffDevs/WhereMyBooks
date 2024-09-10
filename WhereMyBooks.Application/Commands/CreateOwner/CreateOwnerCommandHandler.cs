@@ -1,5 +1,6 @@
 using MediatR;
 using WhereMyBooks.Application.Commands.CreateOwner;
+using WhereMyBooks.Application.Exceptions;
 using WhereMyBooks.Application.Models.Mappers;
 using WhereMyBooks.Infrastructure.Persistence;
 using WhereMyBooks.Core.Entities;
@@ -20,11 +21,18 @@ public class CreateOwnerCommandHandler : IRequestHandler<CreateOwnerCommand, int
 
     public async Task<int> Handle(CreateOwnerCommand request, CancellationToken cancellationToken)
     {
-        var owner = OwnerMapper.MapToOwner(request.Model);
-        var hashPassword = _authService.ComputeSha256Hash(owner.Password);
-        owner.SetPassword(hashPassword);
-        var result = await  _repository.CreateAsync(owner);
+        try
+        {
+            var owner = OwnerMapper.MapToOwner(request.Model);
+            var hashPassword = _authService.ComputeSha256Hash(owner.Password);
+            owner.SetPassword(hashPassword);
+            var result = await _repository.CreateAsync(owner);
 
-        return result.Id;
+            return result.Id;
+        }
+        catch (Exception ex)
+        {
+            throw new InternalException(ex.Message);
+        }
     }
 }

@@ -1,5 +1,6 @@
 using MediatR;
 using WhereMyBooks.Application.Commands.UpdateBook;
+using WhereMyBooks.Application.Exceptions;
 using WhereMyBooks.Core.Enums;
 using WhereMyBooks.Core.Repositories;
 using WhereMyBooks.Infrastructure.Persistence;
@@ -17,12 +18,23 @@ public class DeleteBookCommandHandler : IRequestHandler<DeleteBookCommand>
 
     public async Task Handle(DeleteBookCommand request, CancellationToken cancellationToken)
     {
-        var book = await _repository.GetByIdAsync(request.Id);
-        if (book is null)
+        try
         {
-            throw new NotImplementedException();
-        }
+            var book = await _repository.GetByIdAsync(request.Id);
+            if (book is null)
+            {
+                throw new NotFoundException();
+            }
 
-        await _repository.DeleteAsync(book);
+            await _repository.DeleteAsync(book);
+        }
+        catch (NotFoundException ex)
+        {
+            throw;
+        }
+        catch (Exception ex)
+        {
+            throw new InternalException(ex.Message);
+        }
     }
 }

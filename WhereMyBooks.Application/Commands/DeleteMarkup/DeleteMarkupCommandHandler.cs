@@ -1,4 +1,5 @@
 using MediatR;
+using WhereMyBooks.Application.Exceptions;
 using WhereMyBooks.Core.Repositories;
 using WhereMyBooks.Infrastructure.Persistence;
 
@@ -15,13 +16,24 @@ public class DeleteMarkupCommandHandler : IRequestHandler<DeleteMarkupCommand>
 
     public async Task Handle(DeleteMarkupCommand request, CancellationToken cancellationToken)
     {
-        var markup = await _repository.GetByIdAsync(request.Id);
-            
-        if (markup is null)
+        try
         {
-            throw new NotImplementedException();
-        }
+            var markup = await _repository.GetByIdAsync(request.Id);
 
-        await _repository.DeleteAsync(markup);
+            if (markup is null)
+            {
+                throw new NotFoundException();
+            }
+
+            await _repository.DeleteAsync(markup);
+        }
+        catch (NotFoundException ex)
+        {
+            throw;
+        }
+        catch (Exception exception)
+        {
+            throw new InternalException(exception.Message);
+        }
     }
 }

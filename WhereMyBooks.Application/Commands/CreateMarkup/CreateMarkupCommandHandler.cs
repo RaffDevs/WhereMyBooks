@@ -1,4 +1,5 @@
 using MediatR;
+using WhereMyBooks.Application.Exceptions;
 using WhereMyBooks.Application.Models.Mappers;
 using WhereMyBooks.Core.Entities;
 using WhereMyBooks.Core.Enums;
@@ -20,16 +21,28 @@ public class CreateMarkupCommandHandler : IRequestHandler<CreateMarkupCommand, i
 
     public async Task<int> Handle(CreateMarkupCommand request, CancellationToken cancellationToken)
     {
-        var book = await _bookRepository.GetByIdAsync(request.Model.IdBook);
-
-        if (book is null)
+        try
         {
-            throw new NotImplementedException();
+            var book = await _bookRepository.GetByIdAsync(request.Model.IdBook);
+
+            if (book is null)
+            {
+                throw new NotFoundException();
+            }
+
+            var markup = MarkupMapper.MapToMarkup(request.Model);
+            var result = await _markupRepositoryrepository.CreateAsync(markup);
+
+            return result.Id;
         }
-
-        var markup = MarkupMapper.MapToMarkup(request.Model);
-        var result = await _markupRepositoryrepository.CreateAsync(markup);
-
-        return result.Id;
+        catch (NotFoundException exception)
+        {
+            throw;
+        }
+        catch (Exception exception)
+        {
+            throw new InternalException(exception.Message);
+        }
+        
     }
 }

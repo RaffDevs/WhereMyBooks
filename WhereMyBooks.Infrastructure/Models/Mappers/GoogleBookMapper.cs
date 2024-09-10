@@ -10,11 +10,11 @@ public static class GoogleBookMapper
         return new Book(
             title: bookItem.BookInfo.Title,
             description: bookItem.BookInfo.Description,
-            authors: string.Join(',', bookItem.BookInfo.Authors),
-            publisher: bookItem.BookInfo.Publisher,
+            authors: string.Join(',', bookItem.BookInfo?.Authors ?? []),
+            publisher: bookItem.BookInfo?.Publisher ?? string.Empty,
             pageCount: bookItem.BookInfo.PageCount,
             thumbnailLink: bookItem.BookInfo.ImageLinks?.Thumbnail ?? string.Empty,
-            thumbnailSmallLink: bookItem.BookInfo.ImageLinks?.SmallThumbnail,
+            thumbnailSmallLink: bookItem.BookInfo.ImageLinks?.SmallThumbnail ?? string.Empty,
             code: bookItem.Id,
             isbn: bookItem.BookInfo.IndustryIdentifiersDto
                 .FirstOrDefault(i => i.Type == "ISBN_13")?.Identifier ?? string.Empty,

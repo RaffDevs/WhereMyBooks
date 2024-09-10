@@ -1,4 +1,5 @@
 using MediatR;
+using WhereMyBooks.Application.Exceptions;
 using WhereMyBooks.Application.Models.Mappers;
 using WhereMyBooks.Core.Entities;
 using WhereMyBooks.Core.Repositories;
@@ -17,9 +18,16 @@ public class CreateShelfCommandHandler : IRequestHandler<CreateShelfCommand, int
 
     public async Task<int> Handle(CreateShelfCommand request, CancellationToken cancellationToken)
     {
-        var shelf = ShelfMapper.MapToShelf(request.Model);
-        var result = await _repository.CreateAsync(shelf);
+        try
+        {
+            var shelf = ShelfMapper.MapToShelf(request.Model);
+            var result = await _repository.CreateAsync(shelf);
 
-        return result.Id;
+            return result.Id;
+        }
+        catch (Exception ex)
+        {
+            throw new InternalException(ex.Message);
+        }
     }
 }

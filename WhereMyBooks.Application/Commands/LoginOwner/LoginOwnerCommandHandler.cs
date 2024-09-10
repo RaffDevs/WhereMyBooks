@@ -1,4 +1,5 @@
 using MediatR;
+using WhereMyBooks.Application.Exceptions;
 using WhereMyBooks.Application.Models.Mappers;
 using WhereMyBooks.Application.Models.ViewModels;
 using WhereMyBooks.Core.Repositories;
@@ -19,16 +20,27 @@ public class LoginOwnerCommandHandler : IRequestHandler<LoginOwnerCommand, Login
 
     public async Task<LoginViewModel> Handle(LoginOwnerCommand request, CancellationToken cancellationToken)
     {
-        var passwordHash = _authService.ComputeSha256Hash(request.Model.Password);
-        var owner = await _ownerRepository
-            .GetByEmailAndPasswordAsync(request.Model.Email, passwordHash);
-
-        if (owner is null)
+        try
         {
-            throw new NotImplementedException();
-        }
+            var passwordHash = _authService.ComputeSha256Hash(request.Model.Password);
+            var owner = await _ownerRepository
+                .GetByEmailAndPasswordAsync(request.Model.Email, passwordHash);
 
-        var token = _authService.GenerateJwtToken(request.Model.Email, passwordHash);
-        return LoginMapper.MapToLoginViewModel(owner.Email, token);
+            if (owner is null)
+            {
+                throw new NotFoundException("Nenhum usuario encontrado para este login!");
+            }
+
+            var token = _authService.GenerateJwtToken(request.Model.Email, passwordHash);
+            return LoginMapper.MapToLoginViewModel(owner.Email, token);
+        }
+        catch (NotFoundException ex)
+        {
+            throw;
+        }
+        catch (Exception ex)
+        {
+            throw new InternalException(ex.Message);
+        }
     }
 }

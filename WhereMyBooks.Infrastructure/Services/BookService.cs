@@ -25,32 +25,24 @@ public class BookService : IBookService
     public async Task<List<Book>> SearchBooks(string title, int idShelf)
     {
 
-        try
+        var uriBuilder = new UriBuilder(_httpClient.BaseAddress)
         {
-            var uriBuilder = new UriBuilder(_httpClient.BaseAddress)
-            {
-                Path = "/books/v1/volumes",
-                Query = $"q=intitle:{title}&maxResults=5&key={_key}",
-                Scheme = "https",
-                Port = 443
-            };
+            Path = "/books/v1/volumes",
+            Query = $"q=intitle:{title}&maxResults=5&key={_key}",
+            Scheme = "https",
+            Port = 443
+        };
 
-            var uri = uriBuilder.Uri;
-            using var response = await _httpClient.GetAsync(uri);
-            response.EnsureSuccessStatusCode();
-            var result = await response.Content.ReadFromJsonAsync<GooleBooksServiceResponseDTO>();
+        var uri = uriBuilder.Uri;
+        using var response = await _httpClient.GetAsync(uri);
+        response.EnsureSuccessStatusCode();
+        var result = await response.Content.ReadFromJsonAsync<GooleBooksServiceResponseDTO>();
 
-            var items = result.Items
-                .Select(b => GoogleBookMapper.MapGoogleBookToBook(b, idShelf))
-                .ToList();
+        var items = result.Items
+            .Select(b => GoogleBookMapper.MapGoogleBookToBook(b, idShelf))
+            .ToList();
 
-            return items;
-        }
-        catch (Exception error)
-        {
-            Console.WriteLine(error);
-            throw;
-        }
+        return items;
         
     }
 

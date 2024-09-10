@@ -1,4 +1,5 @@
 using MediatR;
+using WhereMyBooks.Application.Exceptions;
 using WhereMyBooks.Core.Enums;
 using WhereMyBooks.Core.Repositories;
 using WhereMyBooks.Infrastructure.Persistence;
@@ -16,22 +17,33 @@ public class UpdateBookCommandHandler : IRequestHandler<UpdateBookCommand>
 
     public async Task Handle(UpdateBookCommand request, CancellationToken cancellationToken)
     {
-        var book = await _repository.GetByIdAsync(request.Id);
-        if (book is null)
+        try
         {
-            throw new NotImplementedException();
-        }
-        
-        book.SetTitle(request.Model.Title);
-        book.SetDescription(request.Model.Description);
-        book.SetAuthors(request.Model.Authors);
-        book.SetPublisher(request.Model.Publisher);
-        book.SetPageCount(request.Model.PageCount);
-        book.SetIsnb(request.Model.Isbn);
-        book.SetBookType((BookType)request.Model.BookType);
-        book.SetThumbnailLink(request.Model.ThumbnailLink);
-        book.SetThumbnailSmallLink(request.Model.SmallThumbnailLink);
+            var book = await _repository.GetByIdAsync(request.Id);
+            if (book is null)
+            {
+                throw new NotFoundException();
+            }
 
-        await _repository.UpdateAsync(book);
+            book.SetTitle(request.Model.Title);
+            book.SetDescription(request.Model.Description);
+            book.SetAuthors(request.Model.Authors);
+            book.SetPublisher(request.Model.Publisher);
+            book.SetPageCount(request.Model.PageCount);
+            book.SetIsnb(request.Model.Isbn);
+            book.SetBookType((BookType)request.Model.BookType);
+            book.SetThumbnailLink(request.Model.ThumbnailLink);
+            book.SetThumbnailSmallLink(request.Model.SmallThumbnailLink);
+
+            await _repository.UpdateAsync(book);
+        }
+        catch (NotFoundException ex)
+        {
+            throw;
+        }
+        catch (Exception ex)
+        {
+            throw new InternalException(ex.Message);
+        }
     }
 }

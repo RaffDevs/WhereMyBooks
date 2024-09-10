@@ -1,4 +1,5 @@
 using MediatR;
+using WhereMyBooks.Application.Exceptions;
 using WhereMyBooks.Core.Enums;
 using WhereMyBooks.Core.Repositories;
 using WhereMyBooks.Infrastructure.Persistence;
@@ -16,15 +17,27 @@ public class UpdateMarkupCommandHandler : IRequestHandler<UpdateMarkupCommand>
 
     public async Task Handle(UpdateMarkupCommand request, CancellationToken cancellationToken)
     {
-        var markup = await _repository.GetByIdAsync(request.Id);
-        
-        if (markup is null)
+        try
         {
-            throw new NotImplementedException();
+            var markup = await _repository.GetByIdAsync(request.Id);
+
+            if (markup is null)
+            {
+                throw new NotFoundException();
+            }
+
+            markup.SetContent(request.Model.Content);
+            markup.SetPage(request.Model.Page);
+            markup.SetMarkupType(request.Model.Type);
+            await _repository.UpdateAsync(markup);
         }
-        markup.SetContent(request.Model.Content);
-        markup.SetPage(request.Model.Page);
-        markup.SetMarkupType(request.Model.Type);
-        await _repository.UpdateAsync(markup);
+        catch (NotFoundException ex)
+        {
+            throw;
+        }
+        catch (Exception ex)
+        {
+            throw new InternalException(ex.Message);
+        }
     }
 }

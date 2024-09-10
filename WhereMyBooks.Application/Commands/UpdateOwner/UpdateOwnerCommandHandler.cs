@@ -1,4 +1,5 @@
 using MediatR;
+using WhereMyBooks.Application.Exceptions;
 using WhereMyBooks.Core.Repositories;
 using WhereMyBooks.Infrastructure.Persistence;
 
@@ -16,14 +17,25 @@ public class UpdateOwnerCommandHandler : IRequestHandler<UpdateOwnerCommand>
     public async Task Handle(UpdateOwnerCommand request, CancellationToken cancellationToken)
     {
 
-        var owner = await _repository.GetByIdAsync(request.Id);
-        if (owner is null)
+        try
         {
-            throw new NotImplementedException();
+            var owner = await _repository.GetByIdAsync(request.Id);
+            if (owner is null)
+            {
+                throw new NotFoundException();
+            }
+
+            owner.SetEmail(request.Model.Email);
+            owner.SetFullName(request.Model.FullName);
+            await _repository.UpdateAsync(owner);
         }
-        
-        owner.SetEmail(request.Model.Email);
-        owner.SetFullName(request.Model.FullName);
-        await _repository.UpdateAsync(owner);
+        catch (NotFoundException ex)
+        {
+            throw;
+        }
+        catch (Exception ex)
+        {
+            throw new InternalException(ex.Message);
+        }
     }
 }

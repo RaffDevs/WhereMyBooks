@@ -1,4 +1,5 @@
 using MediatR;
+using WhereMyBooks.Application.Exceptions;
 using WhereMyBooks.Core.Entities;
 using WhereMyBooks.Core.Repositories;
 using WhereMyBooks.Infrastructure.Persistence;
@@ -18,15 +19,27 @@ public class CreateBookShelfCommandHandler : IRequestHandler<CreateBookShelfComm
 
     public async Task<int> Handle(CreateBookShelfCommand request, CancellationToken cancellationToken)
     {
-        var owner = await _ownerRepository.GetByIdAsync(request.IdOwner);
-        if (owner is null)
+        try
         {
-            throw new NotImplementedException();
+            var owner = await _ownerRepository.GetByIdAsync(request.IdOwner);
+            if (owner is null)
+            {
+                throw new NotFoundException();
+            }
+
+            var bookShelf = new BookShelf(owner.Id);
+            var result = await _bookShelfrepository.CreateAsync(bookShelf);
+
+            return result.Id;
         }
-
-        var bookShelf = new BookShelf(owner.Id);
-        var result = await _bookShelfrepository.CreateAsync(bookShelf);
-
-        return result.Id;
+        catch (NotFoundException exception)
+        {
+            throw;
+        }
+        catch (Exception ex)
+        {
+            throw new InternalException(ex.Message);
+        }
+        
     }
 }

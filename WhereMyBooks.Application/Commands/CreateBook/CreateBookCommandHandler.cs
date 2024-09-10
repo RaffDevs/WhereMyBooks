@@ -1,4 +1,5 @@
 using MediatR;
+using WhereMyBooks.Application.Exceptions;
 using WhereMyBooks.Application.Models.Mappers;
 using WhereMyBooks.Core.Entities;
 using WhereMyBooks.Core.Repositories;
@@ -17,10 +18,18 @@ public class CreateBookCommandHandler : IRequestHandler<CreateBookCommand, int>
 
     public async Task<int> Handle(CreateBookCommand request, CancellationToken cancellationToken)
     {
-        var book = BookMapper.MapToBook(request.Model);
+        try
+        {
+            var book = BookMapper.MapToBook(request.Model);
 
-        var result = await  _repository.CreateAsync(book);
+            var result = await _repository.CreateAsync(book);
 
-        return result.Id;
+            return result.Id;
+        }
+        catch (Exception exception)
+        {
+            throw new InternalException(exception.Message);
+        }
+        
     }
 }

@@ -1,4 +1,5 @@
 using MediatR;
+using WhereMyBooks.Application.Exceptions;
 using WhereMyBooks.Core.Repositories;
 using WhereMyBooks.Infrastructure.Persistence;
 
@@ -15,12 +16,23 @@ public class DeleteBookShelfCommandHandler : IRequestHandler<DeleteBookShelfComm
 
     public async Task Handle(DeleteBookShelfCommand request, CancellationToken cancellationToken)
     {
-        var bookShelf = await _repository.GetByIdAsync(request.Id);
-        if (bookShelf is null)
+        try
         {
-            throw new NotImplementedException();
-        }
+            var bookShelf = await _repository.GetByIdAsync(request.Id);
+            if (bookShelf is null)
+            {
+                throw new NotFoundException();
+            }
 
-        await _repository.DeleteAsync(bookShelf);
+            await _repository.DeleteAsync(bookShelf);
+        }
+        catch (NotFoundException ex)
+        {
+            throw;
+        }
+        catch (Exception ex)
+        {
+            throw new InternalException(ex.Message);
+        }
     }
 }
