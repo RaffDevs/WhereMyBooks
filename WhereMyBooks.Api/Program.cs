@@ -16,6 +16,7 @@ builder.Services.AddHttpClient(builder.Configuration);
 builder.Services.AddControllers(options =>
 {
     options.Filters.Add(typeof(ValidationFilter));
+    options.Filters.Add(typeof(ExceptionFilter));
 });
 builder.Services.AddMediator();
 builder.Services.AddFluentValidator();

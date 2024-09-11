@@ -1,5 +1,6 @@
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using WhereMyBooks.Application.Exceptions;
 using WhereMyBooks.Application.Models.Mappers;
 using WhereMyBooks.Application.Models.ViewModels;
 using WhereMyBooks.Core.Repositories;
@@ -18,12 +19,19 @@ public class GetAllBooksQueryHandler : IRequestHandler<GetAllBooksQuery, List<Bo
 
     public async Task<List<BookViewModel>> Handle(GetAllBooksQuery request, CancellationToken cancellationToken)
     {
-        var books = await _repository.GetAllAsync(request.IdShelf);
+        try
+        {
+            var books = await _repository.GetAllAsync(request.IdShelf);
 
-        var booksViewModel = books
-            .Select(BookMapper.MapToBookViewModel)
-            .ToList();
+            var booksViewModel = books
+                .Select(BookMapper.MapToBookViewModel)
+                .ToList();
 
-        return booksViewModel;
+            return booksViewModel;
+        }
+        catch (Exception ex)
+        {
+            throw new InternalException(ex.Message);
+        }
     }
 }

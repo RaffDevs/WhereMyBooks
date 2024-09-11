@@ -1,5 +1,6 @@
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using WhereMyBooks.Application.Exceptions;
 using WhereMyBooks.Application.Models.Mappers;
 using WhereMyBooks.Application.Models.ViewModels;
 using WhereMyBooks.Core.Repositories;
@@ -18,14 +19,25 @@ public class GetShelfByIdQueryHandler : IRequestHandler<GetShelfByIdQuery, Shelf
 
     public async Task<ShelfViewModel> Handle(GetShelfByIdQuery request, CancellationToken cancellationToken)
     {
-        var shelf = await _repository.GetByIdAsync(request.Id);
-        
-        if (shelf is null)
+        try
         {
-            throw new NotImplementedException();
-        }
+            var shelf = await _repository.GetByIdAsync(request.Id);
 
-        var shelfViewModel = ShelfMapper.MapToShelfViewModel(shelf);
-        return shelfViewModel;
+            if (shelf is null)
+            {
+                throw new NotFoundException();
+            }
+
+            var shelfViewModel = ShelfMapper.MapToShelfViewModel(shelf);
+            return shelfViewModel;
+        }
+        catch (NotFoundException ex)
+        {
+            throw;
+        }
+        catch (Exception ex)
+        {
+            throw new InternalException(ex.Message);
+        }
     }
 }

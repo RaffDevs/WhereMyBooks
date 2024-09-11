@@ -1,4 +1,5 @@
 using MediatR;
+using WhereMyBooks.Application.Exceptions;
 using WhereMyBooks.Application.Models.Mappers;
 using WhereMyBooks.Application.Models.ViewModels;
 using WhereMyBooks.Core.Repositories;
@@ -17,13 +18,20 @@ public class GetMarkupByIdQueryHandler : IRequestHandler<GetMarkupByIdQuery, Mar
 
     public async Task<MarkupViewModel> Handle(GetMarkupByIdQuery request, CancellationToken cancellationToken)
     {
-        var markup = await _repository.GetByIdAsync(request.Id);
-        if (markup is null)
+        try
         {
-            throw new NotImplementedException();
-        }
+            var markup = await _repository.GetByIdAsync(request.Id);
+            if (markup is null)
+            {
+                throw new NotImplementedException();
+            }
 
-        var markupViewModel = MarkupMapper.MapToMarkupViewModel(markup);
-        return markupViewModel;
+            var markupViewModel = MarkupMapper.MapToMarkupViewModel(markup);
+            return markupViewModel;
+        }
+        catch (Exception ex)
+        {
+            throw new InternalException(ex.Message);
+        }
     }
 }

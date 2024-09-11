@@ -1,5 +1,6 @@
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using WhereMyBooks.Application.Exceptions;
 using WhereMyBooks.Application.Models.Mappers;
 using WhereMyBooks.Application.Models.ViewModels;
 using WhereMyBooks.Core.Repositories;
@@ -18,12 +19,19 @@ public class GetAllMarkupsQueryHandler : IRequestHandler<GetAllMarkupsQuery, Lis
 
     public async Task<List<MarkupViewModel>> Handle(GetAllMarkupsQuery request, CancellationToken cancellationToken)
     {
-        var markups = await _repository.GetAllAsync(request.IdBook);
+        try
+        {
+            var markups = await _repository.GetAllAsync(request.IdBook);
 
-        var markupsViewModel = markups.Select(
-            MarkupMapper.MapToMarkupViewModel
-        ).ToList();
+            var markupsViewModel = markups.Select(
+                MarkupMapper.MapToMarkupViewModel
+            ).ToList();
 
-        return markupsViewModel;
+            return markupsViewModel;
+        }
+        catch (Exception ex)
+        {
+            throw new InternalException(ex.Message);
+        }
     }
 }

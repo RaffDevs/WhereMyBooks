@@ -1,5 +1,6 @@
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using WhereMyBooks.Application.Exceptions;
 using WhereMyBooks.Application.Models.Mappers;
 using WhereMyBooks.Application.Models.ViewModels;
 using WhereMyBooks.Core.Repositories;
@@ -18,13 +19,25 @@ public class GetOwnerByIdQueryHandler : IRequestHandler<GetOwnerByIdQuery, Owner
 
     public async Task<OwnerDetailsViewModel> Handle(GetOwnerByIdQuery request, CancellationToken cancellationToken)
     {
-        var owner = await _repository.GetByIdAsync(request.Id);
-        
-        if (owner is null)
+        try
         {
-            throw new NotImplementedException();
+            var owner = await _repository.GetByIdAsync(request.Id);
+
+            if (owner is null)
+            {
+                throw new NotFoundException();
+            }
+
+            var ownerDetailViewModel = OwnerMapper.MapToOwnerDetailsViewModel(owner);
+            return ownerDetailViewModel;
         }
-        var ownerDetailViewModel = OwnerMapper.MapToOwnerDetailsViewModel(owner);
-        return ownerDetailViewModel;
+        catch (NotFoundException ex)
+        {
+            throw;
+        }
+        catch (Exception ex)
+        {
+            throw new InternalException(ex.Message);
+        }
     }
 }
